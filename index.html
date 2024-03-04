@@ -76,15 +76,18 @@
 
             window.enableNotifications = enableNotifications;
 
-            async function handleNotifications(event) {
+           async function handleNotifications(event) {
                 const receivedDataUint8 = event.target.value;
-                const receivedDataString = new TextDecoder().decode(receivedDataUint8);
+                const dataView = new DataView(receivedDataUint8.buffer);
 
-                console.log('Received data (notification):', receivedDataString);
+                console.log('Received data (notification):', dataView);
 
-                // Append the new data to the existing content
+                // Get the ArrayBufferData as a hex string
+                const hexString = Array.from(new Uint8Array(dataView.buffer), byte => byte.toString(16).padStart(2, '0')).join('');
+
+                // Append the new hex data to the existing content
                 const currentContent = document.getElementById('receivedData').value;
-                const updatedContent = currentContent + receivedDataString;
+                const updatedContent = currentContent + hexString;
 
                 document.getElementById('receivedData').value = updatedContent;
             }
